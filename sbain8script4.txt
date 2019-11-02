@@ -1,0 +1,46 @@
+# Spencer Bain 
+# CS3319
+# Assignment 2 - Part 4
+
+USE sbain8assign2db;
+
+SELECT * FROM doctors;
+SELECT * FROM hospitals;
+SELECT * FROM treats;
+DELETE FROM doctors WHERE licenseDate < '1965-01-01';
+# this command result in an error and cannot delete rows
+# because Joey Shabado and Ben Spock who both have license dates
+# before 1965-01-01 are also both heads of a hospital
+SELECT * FROM doctors;
+SELECT * FROM hospitals;
+SELECT * FROM treats;
+
+# Create view
+CREATE VIEW vpatients AS 
+	SELECT patient.fname AS "Patient Fname", patient.lname AS "Patient Lname", 
+		doctors.lname AS "Doctor Lname", hospitals.name AS "Hospital Name"
+	FROM patient, doctors, hospitals, treats
+	WHERE patient.ohip = treats.ohip
+		AND doctors.license = treats.license
+		AND doctors.license = hospitals.headDoctor
+		AND headStart > '1995-12-31';
+
+# show the view
+SELECT * FROM vpatients;
+
+# show the doctor and treats 
+SELECT * FROM doctors;
+SELECT * FROM treats;
+
+DELETE FROM doctors WHERE lname = "Clooney";
+
+SELECT * FROM doctors;
+SELECT * FROM treats;
+# All the rows in the treats table that referenced Clooney's license were deleted due to cascade
+
+DELETE FROM doctors WHERE specialty = "Surgeon";
+# this delete command results in an error and cannot delete the rows
+# and because Colleen Aziz is both a surgeon and the head of a hospital
+# and head doctors of hospitals cannot be deleted.
+
+
